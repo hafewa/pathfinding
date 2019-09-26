@@ -16,7 +16,7 @@ public class ShortestPath : MonoBehaviour
     public List<Transform> findShortestPath(Transform start, Transform end)
     {
 
-        nodes = GameObject.FindGameObjectsWithTag("Node");
+        nodes = GameObject.FindGameObjectsWithTag("Noeud");
 
         List<Transform> result = new List<Transform>();
         Transform node = DijkstrasAlgo(start, end);
