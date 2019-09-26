@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerateGrid : MonoBehaviour
+public class Grille : MonoBehaviour
 {
 	public int ligne = 10;
 	public int colonne = 10;
 	public Transform noeud;
 
-	public List<Transform> grille = new List<Transform>();
+	private List<Transform> grille = new List<Transform>();
 
 	void Start()
 	{
@@ -22,7 +22,7 @@ public class GenerateGrid : MonoBehaviour
 			for (int j = 0, k = 0; j < colonne; j++, k++)
 			{
 				Transform n = Instantiate(noeud, new Vector3(j + gameObject.transform.position.x, gameObject.transform.position.y, i + gameObject.transform.position.z), Quaternion.identity);
-				n.name = "noeud (" + k + ")";
+				n.name = "Noeud " + k;
 				grille.Add(n);
 			}
 	}
