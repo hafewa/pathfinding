@@ -92,8 +92,8 @@ public class PlayerInput : MonoBehaviour
 	{
 		if (noeudDepart != null && noeudArrivee != null)
 		{
-			ShortestPath finder = gameObject.GetComponent<ShortestPath>();
-			List<Transform> paths = finder.findShortestPath(noeudDepart, noeudArrivee);
+			Pathfinding finder = gameObject.GetComponent<Pathfinding>();
+			List<Transform> paths = finder.pathfinding(noeudDepart, noeudArrivee);
 			foreach (Transform path in paths)
 			{
 				Renderer rend = path.GetComponent<Renderer>();

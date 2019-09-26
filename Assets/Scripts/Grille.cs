@@ -18,11 +18,12 @@ public class Grille : MonoBehaviour
 
 	private void genererGrille()
 	{
+		int k = 0;
 		for (int i = 0; i < ligne; i++)
-			for (int j = 0, k = 0; j < colonne; j++, k++)
+			for (int j = 0; j < colonne; j++)
 			{
 				Transform n = Instantiate(noeud, new Vector3(j + gameObject.transform.position.x, gameObject.transform.position.y, i + gameObject.transform.position.z), Quaternion.identity);
-				n.name = "Noeud " + k;
+				n.name = "Noeud " + k++;
 				grille.Add(n);
 			}
 	}
