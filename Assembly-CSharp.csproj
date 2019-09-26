@@ -57,10 +57,10 @@
      <Compile Include="Assets\Scripts\MinHeap.cs" />
      <Compile Include="Assets\Scripts\Noeud.cs" />
      <Compile Include="Assets\Scripts\PlayerInput.cs" />
+     <Compile Include="Assets\Scripts\Selection Noeud\SelectableUnitComponent.cs" />
+     <Compile Include="Assets\Scripts\Selection Noeud\UnitSelectionComponent.cs" />
+     <Compile Include="Assets\Scripts\Selection Noeud\Utils.cs" />
      <Compile Include="Assets\Scripts\ShortestPath.cs" />
-     <Compile Include="Assets\Scripts\Unit Selection\SelectableUnitComponent.cs" />
-     <Compile Include="Assets\Scripts\Unit Selection\UnitSelectionComponent.cs" />
-     <Compile Include="Assets\Scripts\Unit Selection\Utils.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>D:/Developpement/Unity/Pathfiding/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
