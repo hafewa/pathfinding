@@ -16,76 +16,61 @@ public class Pathfinding : MonoBehaviour
 		while (noeud != null)
 		{
 			chemin.Add(noeud);
-			Noeud courrant = noeud.GetComponent<Noeud>();
-			noeud = courrant.getParent();
+			Noeud courant = noeud.GetComponent<Noeud>();
+			noeud = courant.getParent();
 		}
 		chemin.Reverse();
 		return chemin;
 	}
 
-	private Transform dijkstra(Transform start, Transform end)
+	private Transform dijkstra(Transform depart, Transform arrivee)
 	{
-		// Nodes that are unexplored
-		List<Transform> unexplored = new List<Transform>();
-
-		// We add all the nodes we found into unexplored.
+		List<Transform> inexplores = new List<Transform>();
+		
 		foreach (GameObject obj in noeuds)
 		{
 			Noeud n = obj.GetComponent<Noeud>();
 			if (n.isLibre())
 			{
 				n.reset();
-				unexplored.Add(obj.transform);
+				inexplores.Add(obj.transform);
 			}
 		}
 
-		// Set the starting node weight to 0;
-		Noeud startNode = start.GetComponent<Noeud>();
-		startNode.setPoids(0);
+		Noeud noeudDepart = depart.GetComponent<Noeud>();
+		noeudDepart.setPoids(0);
 
-		while (unexplored.Count > 0)
+		while (inexplores.Count > 0)
 		{
-			// Sort the explored by their weight in ascending order.
-			unexplored.Sort((x, y) => x.GetComponent<Noeud>().getPoids().CompareTo(y.GetComponent<Noeud>().getPoids()));
+			inexplores.Sort((x, y) => x.GetComponent<Noeud>().getPoids().CompareTo(y.GetComponent<Noeud>().getPoids()));
+			Transform courant = inexplores[0];
 
-			// Get the lowest weight in unexplored.
-			Transform current = unexplored[0];
+			if (courant == arrivee) return arrivee;
 
-			// Note: This is used for games, as we just want to reduce compuation, better way will be implementing A*
-			/*
-            // If we reach the end node, we will stop.
-            if(current == end)
-            {   
-                return end;
-            }*/
+			inexplores.Remove(courant);
+			Noeud noeudCourant = courant.GetComponent<Noeud>();
+			List<Transform> voisins = noeudCourant.getVoisins();
 
-			//Remove the node, since we are exploring it now.
-			unexplored.Remove(current);
-
-			Noeud currentNode = current.GetComponent<Noeud>();
-			List<Transform> neighbours = currentNode.getVoisins();
-			foreach (Transform neighNode in neighbours)
+			foreach (Transform noeudVoisin in voisins)
 			{
-				Noeud node = neighNode.GetComponent<Noeud>();
-
-				// We want to avoid those that had been explored and is not walkable.
-				if (unexplored.Contains(neighNode) && node.isLibre())
+				Noeud noeud = noeudVoisin.GetComponent<Noeud>();
+				if (inexplores.Contains(noeudVoisin) && noeud.isLibre())
 				{
-					// Get the distance of the object.
-					float distance = Vector3.Distance(neighNode.position, current.position);
-					distance = currentNode.getPoids() + distance;
-
-					// If the added distance is less than the current weight.
-					if (distance < node.getPoids())
+					float distance = Vector3.Distance(noeudVoisin.position, courant.position) + noeudCourant.getPoids();
+					if (distance < noeud.getPoids())
 					{
-						// We update the new distance as weight and update the new path now.
-						node.setPoids(distance);
-						node.setParent(current);
+						noeud.setPoids(distance);
+						noeud.setParent(courant);
 					}
 				}
 			}
 		}
-		return end;
+		return arrivee;
 	}
+
+	// private Transform aStar(Transform depart, Transform arrivee)
+	// {
+
+	// }
 
 }
