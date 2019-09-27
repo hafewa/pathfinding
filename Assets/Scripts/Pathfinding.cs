@@ -11,7 +11,7 @@ public class Pathfinding : MonoBehaviour
 		noeuds = GameObject.FindGameObjectsWithTag("Noeud");
 		List<Transform> chemin = new List<Transform>();
 
-		Transform noeud = dijkstra(depart, arrivee);
+		Transform noeud = aEtoile(depart, arrivee);
 
 		while (noeud != null)
 		{
@@ -25,8 +25,9 @@ public class Pathfinding : MonoBehaviour
 
 	private Transform dijkstra(Transform depart, Transform arrivee)
 	{
+		Debug.Log("Algorithme Dijkstra");
 		List<Transform> inexplores = new List<Transform>();
-		
+
 		foreach (GameObject obj in noeuds)
 		{
 			Noeud n = obj.GetComponent<Noeud>();
@@ -68,9 +69,59 @@ public class Pathfinding : MonoBehaviour
 		return arrivee;
 	}
 
-	// private Transform aStar(Transform depart, Transform arrivee)
-	// {
+	private Transform aEtoile(Transform depart, Transform arrivee)
+	{
+		Debug.Log("Algorithme A*");
+		foreach (GameObject obj in noeuds)
+		{
+			Noeud n = obj.GetComponent<Noeud>();
+			if (n.isLibre()) n.reset();
+		}
 
-	// }
+		List<Transform> listeOuverte = new List<Transform>();
+		List<Transform> listeFermee = new List<Transform>();
+
+		// Ajoute le départ à la liste ouverte
+
+		depart.GetComponent<Noeud>().setPoids(0);
+		listeOuverte.Add(depart);
+
+		while (listeOuverte.Count > 0)
+		{
+			// Choisis le noeud de poids minimum dans la liste ouverte
+
+			listeOuverte.Sort((x, y) => x.GetComponent<Noeud>().getPoids().CompareTo(y.GetComponent<Noeud>().getPoids()));
+			Transform courant = listeOuverte[0];
+
+			// Si c'est l'arrivée on a fini
+
+			if (courant == arrivee) return arrivee;
+
+			// Sinon déplace le noeud de la liste ouverte à la liste fermée
+
+			listeFermee.Add(courant);
+			listeOuverte.Remove(courant);
+
+			// Récupère les voisins du noeud
+
+			List<Transform> voisins = courant.GetComponent<Noeud>().getVoisins();
+			for (int i = 0; i < voisins.Count; i++)
+			{
+				// Les ajoutes à la liste ouverte sous certaines conditions
+
+				if (voisins[i].GetComponent<Noeud>().isLibre() && !listeOuverte.Contains(voisins[i]) && !listeFermee.Contains(voisins[i]))
+				{
+					float distance = Vector3.Distance(voisins[i].position, courant.position) + courant.GetComponent<Noeud>().getPoids();
+					if (distance < voisins[i].GetComponent<Noeud>().getPoids())
+					{
+						voisins[i].GetComponent<Noeud>().setPoids(distance);
+						voisins[i].GetComponent<Noeud>().setParent(courant);
+					}
+					listeOuverte.Add(voisins[i]);
+				}
+			}
+		}
+		return arrivee;
+	}
 
 }
