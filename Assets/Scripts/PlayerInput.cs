@@ -88,12 +88,26 @@ public class PlayerInput : MonoBehaviour
 		}
 	}
 
-	public void btnFindPath()
+	public void btnDijkstra()
 	{
 		if (noeudDepart != null && noeudArrivee != null)
 		{
 			Pathfinding finder = gameObject.GetComponent<Pathfinding>();
-			List<Transform> paths = finder.pathfinding(noeudDepart, noeudArrivee);
+			List<Transform> paths = finder.pathfinding(noeudDepart, noeudArrivee, true);
+			foreach (Transform path in paths)
+			{
+				Renderer rend = path.GetComponent<Renderer>();
+				rend.material.color = Color.green;
+			}
+		}
+	}
+
+	public void btnAEtoile()
+	{
+		if (noeudDepart != null && noeudArrivee != null)
+		{
+			Pathfinding finder = gameObject.GetComponent<Pathfinding>();
+			List<Transform> paths = finder.pathfinding(noeudDepart, noeudArrivee, false);
 			foreach (Transform path in paths)
 			{
 				Renderer rend = path.GetComponent<Renderer>();

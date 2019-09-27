@@ -6,19 +6,30 @@ public class Pathfinding : MonoBehaviour
 {
 	private GameObject[] noeuds;
 
-	public List<Transform> pathfinding(Transform depart, Transform arrivee)
+	public List<Transform> pathfinding(Transform depart, Transform arrivee, bool algo)
 	{
 		noeuds = GameObject.FindGameObjectsWithTag("Noeud");
 		List<Transform> chemin = new List<Transform>();
 
-		Transform noeud = aEtoile(depart, arrivee);
+		Transform noeud;
+		Noeud courant;
+
+		if (algo)
+			noeud = dijkstra(depart, arrivee);
+		else
+			noeud = aEtoile(depart, arrivee);
+
+		// Remonte le chemin grâce au parent de chaque noeud
 
 		while (noeud != null)
 		{
 			chemin.Add(noeud);
-			Noeud courant = noeud.GetComponent<Noeud>();
+			courant = noeud.GetComponent<Noeud>();
 			noeud = courant.getParent();
 		}
+
+		// Inverse le chemin pour l'avoir dans l'ordre
+
 		chemin.Reverse();
 		return chemin;
 	}
@@ -26,7 +37,10 @@ public class Pathfinding : MonoBehaviour
 	private Transform dijkstra(Transform depart, Transform arrivee)
 	{
 		Debug.Log("Algorithme Dijkstra");
+
 		List<Transform> inexplores = new List<Transform>();
+
+		// Réinitialise chaque noeud et l'ajoute à la liste des noeuds inexplorés
 
 		foreach (GameObject obj in noeuds)
 		{
@@ -38,18 +52,31 @@ public class Pathfinding : MonoBehaviour
 			}
 		}
 
+		// Met le poids du noeud de départ à zéro
+
 		Noeud noeudDepart = depart.GetComponent<Noeud>();
 		noeudDepart.setPoids(0);
 
+		// Tant qu'il reste des noeuds dans la liste des inexplorés
+
 		while (inexplores.Count > 0)
 		{
+			// On prend celui de poids minimum
+
 			inexplores.Sort((x, y) => x.GetComponent<Noeud>().getPoids().CompareTo(y.GetComponent<Noeud>().getPoids()));
 			Transform courant = inexplores[0];
 
+			// Si c'est la fin on arrête
+
 			if (courant == arrivee) return arrivee;
+
+			// On l'enlève de la liste
 
 			inexplores.Remove(courant);
 			Noeud noeudCourant = courant.GetComponent<Noeud>();
+
+			// On récupère les voisins et on calcul leur poids et leur parent en fonction de notre nouvelle position
+
 			List<Transform> voisins = noeudCourant.getVoisins();
 
 			foreach (Transform noeudVoisin in voisins)
@@ -72,6 +99,7 @@ public class Pathfinding : MonoBehaviour
 	private Transform aEtoile(Transform depart, Transform arrivee)
 	{
 		Debug.Log("Algorithme A*");
+
 		foreach (GameObject obj in noeuds)
 		{
 			Noeud n = obj.GetComponent<Noeud>();
@@ -105,19 +133,23 @@ public class Pathfinding : MonoBehaviour
 			// Récupère les voisins du noeud
 
 			List<Transform> voisins = courant.GetComponent<Noeud>().getVoisins();
-			for (int i = 0; i < voisins.Count; i++)
+			Noeud noeudVoisin;
+
+			foreach (Transform voisin in voisins)
 			{
 				// Les ajoutes à la liste ouverte sous certaines conditions
 
-				if (voisins[i].GetComponent<Noeud>().isLibre() && !listeOuverte.Contains(voisins[i]) && !listeFermee.Contains(voisins[i]))
+				noeudVoisin = voisin.GetComponent<Noeud>();
+
+				if (noeudVoisin.isLibre() && !listeOuverte.Contains(voisin) && !listeFermee.Contains(voisin))
 				{
-					float distance = Vector3.Distance(voisins[i].position, courant.position) + courant.GetComponent<Noeud>().getPoids();
-					if (distance < voisins[i].GetComponent<Noeud>().getPoids())
+					float distance = Vector3.Distance(voisin.position, courant.position) + courant.GetComponent<Noeud>().getPoids();
+					if (distance < noeudVoisin.getPoids())
 					{
-						voisins[i].GetComponent<Noeud>().setPoids(distance);
-						voisins[i].GetComponent<Noeud>().setParent(courant);
+						noeudVoisin.setPoids(distance);
+						noeudVoisin.setParent(courant);
 					}
-					listeOuverte.Add(voisins[i]);
+					listeOuverte.Add(voisin);
 				}
 			}
 		}
