@@ -66,10 +66,6 @@ public class Pathfinding : MonoBehaviour
 			inexplores.Sort((x, y) => x.GetComponent<Noeud>().getPoids().CompareTo(y.GetComponent<Noeud>().getPoids()));
 			Transform courant = inexplores[0];
 
-			// Si c'est la fin on arrête
-
-			if (courant == arrivee) return arrivee;
-
 			// On l'enlève de la liste
 
 			inexplores.Remove(courant);
@@ -153,7 +149,7 @@ public class Pathfinding : MonoBehaviour
 				}
 			}
 		}
-		return arrivee;
+		return null;
 	}
 
 }
